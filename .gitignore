@@ -33,3 +33,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+/.idea/Social-Verse.iml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/.idea/modules.xml
