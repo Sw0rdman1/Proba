@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer } from "react";
+import { Dispatch, createContext, useEffect, useReducer } from "react";
 import { Action, State } from "./context.interface";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../utils/firebaseConfig";
@@ -15,9 +15,9 @@ const initialState = {
 };
 
 export const AppContext = createContext<State>(initialState);
-export const AppDispatchContext = createContext<
-  React.Dispatch<Action> | undefined
->(undefined);
+export const AppDispatchContext = createContext<Dispatch<Action> | undefined>(
+  undefined
+);
 
 interface AppProviderProps {
   children: React.ReactNode;
@@ -87,9 +87,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
           type: "USER_LOGGED_IN",
           payload: { user: user },
         });
+        // TODO : fetch POSTS
       } else {
-        console.log("user is not logged in");
-
         dispatch({ type: "USER_NOT_LOGGED_IN" });
       }
     });
