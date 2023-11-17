@@ -1,19 +1,19 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-// import { StackScreenProps } from "@react-navigation/stack";
+import { StackScreenProps } from "@react-navigation/stack";
 import Animated, {
   FadeInDown,
   BounceInRight,
   BounceInLeft,
   FadeInUp,
 } from "react-native-reanimated";
-// import Button from "../../components/Button";
 import COLORS from "../../constants/Colors";
+import Button from "../../components/ui/Button";
 
-const WelcomeScreen: React.FC = () => {
-  // const navigateToPage = (page: string) => {
-  //   navigation.navigate(page);
-  // };
+const WelcomeScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
+  const navigateToPage = (page: string) => {
+    navigation.navigate(page);
+  };
 
   return (
     <LinearGradient
@@ -160,18 +160,18 @@ const WelcomeScreen: React.FC = () => {
             </Animated.Text>
           </View>
           <Animated.View entering={BounceInLeft.delay(2300).duration(1250)}>
-            {/* <Button
+            <Button
               title="Sign In"
               style={{
                 marginTop: 16,
                 width: "100%",
               }}
               onPress={() => navigateToPage("LogIn")}
-            /> */}
+            />
           </Animated.View>
 
           <Animated.View entering={BounceInRight.delay(2300).duration(1250)}>
-            {/* <Button
+            <Button
               title="Join Now"
               style={{
                 marginTop: 15,
@@ -180,7 +180,7 @@ const WelcomeScreen: React.FC = () => {
               filled={true}
               color="transparent"
               onPress={() => navigateToPage("Registration")}
-            /> */}
+            />
           </Animated.View>
         </View>
       </View>
