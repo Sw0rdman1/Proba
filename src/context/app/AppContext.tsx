@@ -1,6 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
 import { Action, State } from "./context.interface";
-import { User } from "../../service/AuthService";
 
 const initialState = {
   user: null,

@@ -1,8 +1,6 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import Animated from "react-native-reanimated";
-import { FadeInUp, FadeInDown } from "react-native-reanimated";
+import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
 import COLORS from "../constants/Colors";
 
 interface LoadingScreenProps {

@@ -1,5 +1,4 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 // import { StackScreenProps } from "@react-navigation/stack";
 import Animated, {
