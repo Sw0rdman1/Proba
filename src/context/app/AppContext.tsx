@@ -8,8 +8,6 @@ const initialState = {
   loading: {
     user: true,
     data: false,
-    login: false,
-    register: false,
   },
   posts: [],
 };

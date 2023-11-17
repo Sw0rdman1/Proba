@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
 import COLORS from "../constants/Colors";
+import GradientBackground from "../components/ui/GradientBackground";
 
 interface LoadingScreenProps {
   loading: {
@@ -12,10 +12,7 @@ interface LoadingScreenProps {
 
 const LoadingScreen = ({ loading }: LoadingScreenProps) => {
   return (
-    <LinearGradient
-      style={styles.fullContainer}
-      colors={[COLORS.secondary, COLORS.primary]}
-    >
+    <GradientBackground>
       {loading.data && (
         <View style={styles.container}>
           <Animated.Text
@@ -32,7 +29,7 @@ const LoadingScreen = ({ loading }: LoadingScreenProps) => {
           </Animated.Text>
         </View>
       )}
-    </LinearGradient>
+    </GradientBackground>
   );
 };
 
