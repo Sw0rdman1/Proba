@@ -1,11 +1,12 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { Action, State } from "./context.interface";
+import { User } from "../../service/AuthService";
 
 const initialState = {
   user: null,
   loading: {
     user: true,
-    data: true,
+    data: false,
     login: false,
     register: false,
   },
@@ -23,9 +24,25 @@ interface AppProviderProps {
 
 export const appReducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case "REQUEST_LOGIN":
+    case "USER_LOGGED_IN":
       return {
         ...state,
+        user: action.payload.user,
+        loading: {
+          ...state.loading,
+          user: false,
+          data: true,
+        },
+      };
+
+    case "USER_NOT_LOGGED_IN":
+      return {
+        ...state,
+        user: null,
+        loading: {
+          ...state.loading,
+          user: false,
+        },
       };
 
     case "LOGIN_SUCCESS":
@@ -61,6 +78,24 @@ export const appReducer = (state: State, action: Action): State => {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+
+  useEffect(() => {
+    const checkUserLoggedIn = () => {
+      setTimeout(() => {
+        const user = null;
+
+        if (user) {
+          dispatch({
+            type: "USER_LOGGED_IN",
+            payload: { user: user },
+          });
+        } else {
+          dispatch({ type: "USER_NOT_LOGGED_IN" });
+        }
+      }, 500);
+    };
+    checkUserLoggedIn();
+  }, []);
 
   return (
     <AppContext.Provider value={state}>
