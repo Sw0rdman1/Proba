@@ -10,8 +10,6 @@ export interface State {
   loading: {
     user: boolean;
     data: boolean;
-    login: boolean;
-    register: boolean;
   };
   posts: any[];
 }
