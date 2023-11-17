@@ -1,5 +1,7 @@
 import { createContext, useEffect, useReducer } from "react";
 import { Action, State } from "./context.interface";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../utils/firebaseConfig";
 
 const initialState = {
   user: null,
@@ -79,21 +81,20 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
   useEffect(() => {
-    const checkUserLoggedIn = () => {
-      setTimeout(() => {
-        const user = null;
+    const unsubscribeFromAuthStatuChanged = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch({
+          type: "USER_LOGGED_IN",
+          payload: { user: user },
+        });
+      } else {
+        console.log("user is not logged in");
 
-        if (user) {
-          dispatch({
-            type: "USER_LOGGED_IN",
-            payload: { user: user },
-          });
-        } else {
-          dispatch({ type: "USER_NOT_LOGGED_IN" });
-        }
-      }, 500);
-    };
-    checkUserLoggedIn();
+        dispatch({ type: "USER_NOT_LOGGED_IN" });
+      }
+    });
+
+    return unsubscribeFromAuthStatuChanged;
   }, []);
 
   return (
