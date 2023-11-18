@@ -57,7 +57,7 @@ const EmailInput: React.FC<EmailInputProps> = ({ email, setEmail }) => {
         style={{
           width: "100%",
           height: 48,
-          backgroundColor: COLORS.whitesmoke,
+          backgroundColor: COLORS.whiteBg,
           borderColor: email.error ? COLORS.error : COLORS.grey,
           borderWidth: 1,
           borderRadius: 20,

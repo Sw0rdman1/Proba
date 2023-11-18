@@ -1,3 +1,4 @@
+import { AppService } from "../../service/AppService";
 import { User } from "../../service/AuthService";
 
 export interface Action {
@@ -12,4 +13,5 @@ export interface State {
     data: boolean;
   };
   posts: any[];
+  app: AppService;
 }

@@ -2,6 +2,7 @@ import { Dispatch, createContext, useEffect, useReducer } from "react";
 import { Action, State } from "./context.interface";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../utils/firebaseConfig";
+import { AppService } from "../../service/AppService";
 
 const initialState = {
   user: null,
@@ -10,6 +11,7 @@ const initialState = {
     data: false,
   },
   posts: [],
+  app: new AppService(),
 };
 
 export const AppContext = createContext<State>(initialState);
