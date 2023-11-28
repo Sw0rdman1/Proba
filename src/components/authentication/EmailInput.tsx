@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: COLORS.error,
     marginLeft: 15,
-    paddingTop: 5,
+    paddingTop: 3,
     height: 22,
     fontSize: 13,
   },

@@ -1,0 +1,139 @@
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  addDoc,
+  doc,
+  getDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { User } from "./AuthService";
+
+export interface Post {
+  id: string;
+  content: string;
+  contentPhoto: string;
+  author: User;
+  createdAt: Date;
+  numberOfLikes: number;
+  numberOfComments: number;
+  numberOfBookmarks: number;
+  liked: boolean;
+  bookmarked: boolean;
+  newPost?: boolean;
+}
+
+class PostService {
+  private db = getFirestore();
+  private postsCollection = collection(this.db, "posts");
+  private userService = new UserService();
+  // private likeService = new LikeService();
+  // private bookmarkService = new BookmarkService();
+
+  async getPosts(): Promise<Post[]> {
+    const querySnapshot = await getDocs(this.postsCollection);
+    const posts = await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        const data = doc.data();
+
+        const post: Post = {
+          id: doc.id,
+          content: data.content,
+          contentPhoto: data.contentPhoto,
+          author: {
+            uid: data.authorID,
+            displayName: "John Doe",
+            email: "johndoe",
+            profilePicture: "https://i.pravatar.cc/300",
+            isVerified: true,
+          },
+          createdAt: data.createdAt.toDate(),
+          numberOfLikes: data.numberOfLikes,
+          numberOfComments: data.numberOfComments,
+          numberOfBookmarks: data.numberOfBookmarks,
+          liked: false,
+          bookmarked: false,
+        };
+        return post;
+      })
+    );
+    return posts;
+  }
+
+  async getPostByID(postID: string, author: User): Promise<Post> {
+    const docRef = doc(this.db, "posts", postID);
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+
+    const post: Post = {
+      id: docSnap.id,
+      content: data?.content,
+      contentPhoto: data?.contentPhoto,
+      author: author,
+      createdAt: data?.createdAt.toDate(),
+      numberOfLikes: 0,
+      numberOfComments: 0,
+      numberOfBookmarks: 0,
+      liked: false,
+      bookmarked: false,
+    };
+    return post;
+  }
+
+  // async getPostData(post: Post, currentUserID: string): Promise<Post> {
+  //   return {
+  //     ...post,
+  //     liked: await this.likeService.isPostLiked(post.id, currentUserID),
+  //     author: await this.userService.getUserByID(post.author?.id),
+  //     bookmarked: await this.bookmarkService.isPostBookmarked(
+  //       post.id,
+  //       currentUserID
+  //     ),
+  //   };
+  // }
+
+  async getPostsByUserCreator(user: User): Promise<Post[]> {
+    const querySnapshot = await getDocs(
+      query(this.postsCollection, where("authorID", "==", user.uid))
+    );
+    const posts = await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        const data = doc.data();
+        const post: Post = {
+          id: doc.id,
+          content: data.content,
+          contentPhoto: data.contentPhoto,
+          author: user,
+          createdAt: data?.createdAt.toDate(),
+          numberOfLikes: 0,
+          numberOfComments: 0,
+          numberOfBookmarks: 0,
+          liked: false,
+          bookmarked: false,
+        };
+        return post;
+      })
+    );
+    return posts;
+  }
+
+  // async generateRandomPost(): Promise<Post> {
+  //   const post = {
+  //     authorID: "EVni79jimWfDnXO4LnUTsB3WhRK2",
+  //     content: faker.lorem.sentence(),
+  //     contentPhoto: faker.image.urlPicsumPhotos(),
+  //     createdAt: faker.date.recent(),
+  //     numberOfLikes: 0,
+  //     numberOfComments: 0,
+  //     numberOfBookmarks: 0,
+  //   };
+
+  //   const docRef = await addDoc(this.postsCollection, post);
+  //   const author = await this.userService.getUserByID(post.authorID);
+  //   return this.getPostByID(docRef.id, author);
+  // }
+}
+
+export default PostService;
