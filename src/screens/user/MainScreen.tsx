@@ -1,16 +1,12 @@
 import { View, Text, StyleSheet } from "react-native";
-import { useAppContext } from "../../context/app/useApp";
+import PostsList from "../../components/main/PostsList";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const MainScreen = () => {
-  const { posts, app } = useAppContext();
-
-  console.log(posts.length);
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Social-Verse!</Text>
-      <Text style={styles.subtitle}>This is the main screen.</Text>
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <PostsList />
+    </GestureHandlerRootView>
   );
 };
 
