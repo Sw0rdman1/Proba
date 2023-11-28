@@ -1,11 +1,5 @@
-/**
- *
- * Inspiration: https://dribbble.com/shots/3731362-Event-cards-iOS-interaction
- */
-
 import * as React from "react";
 import {
-  StatusBar,
   Image,
   FlatList,
   Dimensions,
@@ -13,11 +7,8 @@ import {
   Text,
   View,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-const { width, height } = Dimensions.get("screen");
-import { EvilIcons } from "@expo/vector-icons";
 import {
   FlingGestureHandler,
   Directions,
@@ -25,13 +16,14 @@ import {
 } from "react-native-gesture-handler";
 import { Post } from "../../service/PostService";
 import { useAppContext } from "../../context/app/useApp";
+import Avatar from "../ui/Avatar";
+import COLORS from "../../constants/Colors";
+const { width, height } = Dimensions.get("screen");
 
-// https://www.creative-flyers.com
-
-const OVERFLOW_HEIGHT = 70;
+const OVERFLOW_HEIGHT = 75;
 const SPACING = 10;
-const ITEM_WIDTH = width * 0.82;
-const ITEM_HEIGHT = ITEM_WIDTH * 1.7;
+const ITEM_WIDTH = width * 0.84;
+const ITEM_HEIGHT = ITEM_WIDTH * 1.5;
 const VISIBLE_ITEMS = 3;
 
 interface OverflowItemsProps {
@@ -54,20 +46,12 @@ const OverflowItems: React.FC<OverflowItemsProps> = ({
         {data.map((item: Post, index: number) => {
           return (
             <View key={index} style={styles.itemContainer}>
-              <Text style={[styles.title]} numberOfLines={1}>
-                {item.author.displayName}
-              </Text>
-              <View style={styles.itemContainerRow}>
-                <Text style={[styles.location]}>
-                  <EvilIcons
-                    name="location"
-                    size={16}
-                    color="black"
-                    style={{ marginRight: 5 }}
-                  />
-                  {item.author.email}
+              <Avatar user={item.author} size={45} />
+              <View>
+                <Text style={[styles.name]} numberOfLines={1}>
+                  {item.author.displayName}
                 </Text>
-                <Text style={[styles.date]}>{item.numberOfLikes}</Text>
+                <Text style={[styles.email]}>{item.author.email}</Text>
               </View>
             </View>
           );
@@ -127,8 +111,7 @@ const PostsList: React.FC = () => {
           }
         }}
       >
-        <SafeAreaView style={styles.container}>
-          <StatusBar hidden />
+        <View style={styles.container}>
           <OverflowItems data={posts} scrollXAnimated={scrollXAnimated} />
           <FlatList
             data={posts}
@@ -139,7 +122,8 @@ const PostsList: React.FC = () => {
               flex: 1,
               justifyContent: "center",
               padding: SPACING * 2,
-              marginTop: 50,
+              marginTop: 10,
+              backgroundColor: COLORS.whiteBg,
             }}
             scrollEnabled={false}
             removeClippedSubviews={false}
@@ -228,7 +212,7 @@ const PostsList: React.FC = () => {
               ]}
             />
           </View>
-        </SafeAreaView>
+        </View>
       </FlingGestureHandler>
     </FlingGestureHandler>
   );
@@ -238,30 +222,27 @@ export default PostsList;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 7,
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.white,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "900",
+  name: {
+    fontSize: 20,
+    fontWeight: "800",
     textTransform: "uppercase",
     letterSpacing: -1,
   },
-  location: {
-    fontSize: 16,
-  },
-  date: {
-    fontSize: 12,
+  email: {
+    fontSize: 13,
+    fontWeight: "500",
   },
   itemContainer: {
     height: OVERFLOW_HEIGHT,
     padding: SPACING * 2,
-  },
-  itemContainerRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    gap: 10,
   },
   overflowContainer: {
     height: OVERFLOW_HEIGHT,

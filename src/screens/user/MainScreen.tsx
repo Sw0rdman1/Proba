@@ -1,31 +1,26 @@
-import { View, Text, StyleSheet } from "react-native";
 import PostsList from "../../components/main/PostsList";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import MainScreenHeader from "../../components/main/Header";
+import { View, StyleSheet } from "react-native";
+import COLORS from "../../constants/Colors";
 
 const MainScreen = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PostsList />
+      <View style={styles.container}>
+        <MainScreenHeader />
+        <PostsList />
+      </View>
     </GestureHandlerRootView>
   );
 };
 
+export default MainScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: "#666",
+    backgroundColor: COLORS.middleColor,
+    flexDirection: "column",
   },
 });
-
-export default MainScreen;
