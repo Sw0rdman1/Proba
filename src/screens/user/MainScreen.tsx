@@ -1,6 +1,11 @@
 import { View, Text, StyleSheet } from "react-native";
+import { useAppContext } from "../../context/app/useApp";
 
 const MainScreen = () => {
+  const { posts, app } = useAppContext();
+
+  console.log(posts.length);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to Social-Verse!</Text>

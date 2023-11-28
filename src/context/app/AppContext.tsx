@@ -72,6 +72,16 @@ export const appReducer = (state: State, action: Action): State => {
         ...state,
       };
 
+    case "GET_INITIAL_POSTS":
+      return {
+        ...state,
+        posts: action.payload.posts,
+        loading: {
+          ...state.loading,
+          data: false,
+        },
+      };
+
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
@@ -87,7 +97,16 @@ export const AppProvider = ({ children }: AppProviderProps) => {
           type: "USER_LOGGED_IN",
           payload: { user: user },
         });
-        // TODO : fetch POSTS
+
+        state.app
+          .post()
+          .getPosts(user.uid)
+          .then((posts) => {
+            dispatch({
+              type: "GET_INITIAL_POSTS",
+              payload: { posts: posts },
+            });
+          });
       } else {
         dispatch({ type: "USER_NOT_LOGGED_IN" });
       }

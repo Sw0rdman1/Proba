@@ -10,6 +10,9 @@ import {
   where,
 } from "firebase/firestore";
 import { User } from "./AuthService";
+import LikeService from "./LikeService";
+import BookmarkService from "./BookmarkService";
+import UserService from "./UserSevice";
 
 export interface Post {
   id: string;
@@ -29,10 +32,10 @@ class PostService {
   private db = getFirestore();
   private postsCollection = collection(this.db, "posts");
   private userService = new UserService();
-  // private likeService = new LikeService();
-  // private bookmarkService = new BookmarkService();
+  private likeService = new LikeService();
+  private bookmarkService = new BookmarkService();
 
-  async getPosts(): Promise<Post[]> {
+  async getPosts(currentUserID: string): Promise<Post[]> {
     const querySnapshot = await getDocs(this.postsCollection);
     const posts = await Promise.all(
       querySnapshot.docs.map(async (doc) => {
@@ -42,19 +45,16 @@ class PostService {
           id: doc.id,
           content: data.content,
           contentPhoto: data.contentPhoto,
-          author: {
-            uid: data.authorID,
-            displayName: "John Doe",
-            email: "johndoe",
-            profilePicture: "https://i.pravatar.cc/300",
-            isVerified: true,
-          },
           createdAt: data.createdAt.toDate(),
           numberOfLikes: data.numberOfLikes,
           numberOfComments: data.numberOfComments,
           numberOfBookmarks: data.numberOfBookmarks,
-          liked: false,
-          bookmarked: false,
+          liked: await this.likeService.isPostLiked(doc.id, currentUserID),
+          author: await this.userService.getUserByID(data.authorID),
+          bookmarked: await this.bookmarkService.isPostBookmarked(
+            doc.id,
+            currentUserID
+          ),
         };
         return post;
       })
@@ -82,17 +82,17 @@ class PostService {
     return post;
   }
 
-  // async getPostData(post: Post, currentUserID: string): Promise<Post> {
-  //   return {
-  //     ...post,
-  //     liked: await this.likeService.isPostLiked(post.id, currentUserID),
-  //     author: await this.userService.getUserByID(post.author?.id),
-  //     bookmarked: await this.bookmarkService.isPostBookmarked(
-  //       post.id,
-  //       currentUserID
-  //     ),
-  //   };
-  // }
+  async getPostData(post: Post, currentUserID: string): Promise<Post> {
+    return {
+      ...post,
+      liked: await this.likeService.isPostLiked(post.id, currentUserID),
+      author: await this.userService.getUserByID(post.author.uid),
+      bookmarked: await this.bookmarkService.isPostBookmarked(
+        post.id,
+        currentUserID
+      ),
+    };
+  }
 
   async getPostsByUserCreator(user: User): Promise<Post[]> {
     const querySnapshot = await getDocs(
